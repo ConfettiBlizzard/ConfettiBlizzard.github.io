@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Should I Bake? | ConfettiBlizzard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #FFF0F5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background: #D4537E;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    header h1 {
+      color: #fff;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    header p {
+      color: #FBEAF0;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 680px;
+      padding: 2rem 1.5rem;
+    }
+
+    .prog-bg {
+      background: #F4C0D1;
+      border-radius: 99px;
+      height: 10px;
+      margin-bottom: 1.75rem;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: #D4537E;
+      transition: width 0.4s ease;
+    }
+
+    .step-ind {
+      font-size: 12px;
+      color: #993556;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .qlabel {
+      font-size: 22px;
+      font-weight: 800;
+      color: #3C1020;
+      margin-bottom: 1.25rem;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .opts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .opt {
+      background: #fff;
+      border: 2px solid #F4C0D1;
+      border-radius: 16px;
+      padding: 1rem 0.75rem;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      color: #3C1020;
+      text-align: center;
+      transition: all 0.15s ease;
+      line-height: 1.4;
+    }
+    .opt:hover { background: #FBEAF0; border-color: #D4537E; }
+    .opt.sel { background: #D4537E; border-color: #D4537E; color: #fff; }
+    .opt-icon { font-size: 22px; display: block; margin-bottom: 6px; }
+
+    .mascot-wrap {
+      border-radius: 20px;
+      background: #FBEAF0;
+      border: 2px solid #F4C0D1;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.25rem 1rem 0.75rem;
+    }
+    .mascot-wrap img {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+    }
+    .mascot-caption {
+      font-size: 13px;
+      font-weight: 700;
+      color: #993556;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .back-btn {
+      background: #fff;
+      border: 2px solid #F4C0D1;
+      border-radius: 12px;
+      padding: 0.6rem 1.5rem;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      color: #993556;
+    }
+    .back-btn:hover { background: #FBEAF0; }
+    .next-btn {
+      background: #D4537E;
+      border: none;
+      border-radius: 12px;
+      padding: 0.7rem 2rem;
+      cursor: pointer;
+      font-size: 15px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      color: #fff;
+      opacity: 0.35;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .next-btn.on { opacity: 1; pointer-events: all; }
+    .next-btn.on:hover { background: #993556; }
+
+    .result-main {
+      background: #fff;
+      border: 2px solid #F4C0D1;
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .result-emoji { font-size: 52px; margin-bottom: 0.75rem; display: block; }
+    .result-title { font-size: 24px; font-weight: 800; color: #3C1020; margin-bottom: 0.5rem; }
+    .result-desc { font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 1.25rem; }
+    .tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .tag { background: #FBEAF0; color: #993556; border-radius: 99px; padding: 4px 14px; font-size: 13px; font-weight: 700; }
+
+    .recipe-btn {
+      display: inline-block;
+      background: #D4537E;
+      color: #fff;
+      border-radius: 12px;
+      padding: 0.75rem 2rem;
+      font-size: 15px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+    }
+    .recipe-btn:hover { background: #993556; }
+
+    .more-btn {
+      display: block;
+      background: #fff;
+      border: 2px solid #F4C0D1;
+      border-radius: 12px;
+      color: #993556;
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0 auto;
+      padding: 0.6rem 1.5rem;
+      width: 100%;
+    }
+    .more-btn:hover { background: #FBEAF0; }
+
+    .alts-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #993556;
+      text-align: center;
+      margin: 1.25rem 0 0.75rem;
+    }
+    .alts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+    .alt-card {
+      background: #fff;
+      border: 2px solid #F4C0D1;
+      border-radius: 16px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .alt-card-emoji { font-size: 30px; margin-bottom: 8px; display: block; }
+    .alt-card-title { font-size: 13px; font-weight: 700; color: #3C1020; margin-bottom: 8px; line-height: 1.3; }
+    .alt-card-link {
+      font-size: 13px;
+      color: #D4537E;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-decoration: underline;
+    }
+    .alt-card-link:hover { color: #993556; }
+
+    .restart-btn {
+      display: block;
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 13px;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      margin: 1rem auto 0;
+      text-decoration: underline;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 12px;
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>What Should I Bake?</h1>
+  <p>Let Pepper the panda help you decide!</p>
+</header>
+
+<main>
+  <div class="prog-bg"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  <div id="qbody"></div>
+</main>
+
+<footer>Made with love by ConfettiBlizzard</footer>
+
+<script>
+const Qs = [
+  {
+    key: "time",
+    label: "How much time do you have?",
+    opts: [
+      { icon: "⚡", label: "Under 30 mins", val: "quick" },
+      { icon: "☕", label: "About an hour", val: "medium" },
+      { icon: "🌅", label: "All afternoon", val: "long" }
+    ],
+    img: "panda_02_watch.png",
+    caption: "Hmm, how long do we have?"
+  },
+  {
+    key: "mood",
+    label: "What's your baking mood?",
+    opts: [
+      { icon: "🍫", label: "Rich & indulgent", val: "indulgent" },
+      { icon: "🌸", label: "Light & delicate", val: "light" },
+      { icon: "🎉", label: "Fun & impressive", val: "impressive" },
+      { icon: "🤗", label: "Cosy & comforting", val: "cosy" }
+    ],
+    img: "panda_01_whisk.png",
+    caption: "What kind of treat sounds good?"
+  },
+  {
+    key: "who",
+    label: "Who are you baking for?",
+    opts: [
+      { icon: "🙋", label: "Just me", val: "solo" },
+      { icon: "👫", label: "A few friends", val: "small" },
+      { icon: "🎂", label: "A big group", val: "crowd" }
+    ],
+    img: "panda_05_wave.png",
+    caption: "Baking for a crowd or keeping it cosy?"
+  },
+  {
+    key: "ingredients",
+    label: "What's in your cupboard?",
+    opts: [
+      { icon: "🍫", label: "Lots of chocolate", val: "chocolate" },
+      { icon: "🍋", label: "Citrus & fruit", val: "fruit" },
+      { icon: "🌰", label: "Nuts & spices", val: "nuts" },
+      { icon: "🥛", label: "Just the basics", val: "basics" }
+    ],
+    img: "panda_04_flour.png",
+    caption: "Let me check what we have in here!"
+  },
+  {
+    key: "skill",
+    label: "How confident are you feeling?",
+    opts: [
+      { icon: "😊", label: "Keep it simple", val: "beginner" },
+      { icon: "👩‍🍳", label: "Ready for a challenge", val: "intermediate" },
+      { icon: "🏆", label: "Bring it on!", val: "advanced" }
+    ],
+    img: "panda_03_bowl.png",
+    caption: "How adventurous are we feeling today?"
+  }
+];
+
+const BAKES = [
+  { id:"brownies", emoji:"🍫", title:"Fudgy chocolate brownies", desc:"Dense, gooey, and absolutely irresistible — the kind that disappear in minutes.", tags:["30–40 mins","Crowd pleaser","Chocolatey"], url:"https://www.bbcgoodfood.com/recipes/best-ever-chocolate-brownies-recipe", score: a => (a.ingredients==="chocolate"?3:0)+(a.mood==="indulgent"?2:0)+(a.time==="quick"?1:0) },
+  { id:"lemon-drizzle", emoji:"🍋", title:"Lemon drizzle cake", desc:"Zingy and moist with that addictive sugary crust on top. A true classic.", tags:["1 hour","Great for sharing","Zesty"], url:"https://www.bbcgoodfood.com/recipes/lemon-drizzle-cake", score: a => (a.ingredients==="fruit"?3:0)+(a.mood==="light"?2:0)+(a.who==="small"?1:0) },
+  { id:"cookies", emoji:"🍪", title:"Chocolate chip cookies", desc:"Crispy on the edges, chewy in the middle — impossible to eat just one.", tags:["Under 30 mins","Beginner friendly","Classic"], url:"https://www.bbcgoodfood.com/recipes/triple-chocolate-cookies", score: a => (a.time==="quick"?3:0)+(a.skill==="beginner"?2:0)+(a.who==="solo"?1:0) },
+  { id:"carrot-cake", emoji:"🥕", title:"Carrot cake with cream cheese frosting", desc:"Warmly spiced and topped with fluffy cream cheese frosting — easier than it looks.", tags:["1.5 hours","Feeds a crowd","Cosy"], url:"https://www.bbcgoodfood.com/recipes/carrot-cake", score: a => (a.mood==="cosy"?3:0)+(a.ingredients==="nuts"?2:0)+(a.who==="crowd"?1:0) },
+  { id:"victoria", emoji:"🎂", title:"Victoria sponge", desc:"Light, fluffy, and filled with jam and cream. The quintessential celebration cake.", tags:["1 hour","Classic","Elegant"], url:"https://www.bbcgoodfood.com/recipes/classic-victoria-sandwich-recipe", score: a => (a.who==="crowd"?3:0)+(a.mood==="impressive"?2:0)+(a.skill==="intermediate"?1:0) },
+  { id:"banana-bread", emoji:"🍌", title:"Banana bread", desc:"Soft, fragrant, and perfect with a cup of tea. The ultimate cosy bake.", tags:["1 hour","Super easy","Comforting"], url:"https://www.bbcgoodfood.com/recipes/banana-bread", score: a => (a.skill==="beginner"?3:0)+(a.mood==="cosy"?2:0)+(a.ingredients==="basics"?1:0) },
+  { id:"layer-cake", emoji:"🎉", title:"Triple layer celebration cake", desc:"Three layers of fluffy sponge, buttercream, and all the decorations your heart desires.", tags:["2+ hours","Showstopper","Advanced"], url:"https://www.bbcgoodfood.com/recipes/showstopper-layer-cake", score: a => (a.skill==="advanced"?3:0)+(a.mood==="impressive"?2:0)+(a.who==="crowd"?1:0) },
+  { id:"muffins", emoji:"🧁", title:"Blueberry muffins", desc:"Soft, domed, and bursting with fruit. Ready in 30 minutes and endlessly satisfying.", tags:["30 mins","Beginner friendly","Fruity"], url:"https://www.bbcgoodfood.com/recipes/blueberry-muffins", score: a => (a.time==="quick"?2:0)+(a.ingredients==="fruit"?2:0)+(a.mood==="light"?1:0) }
+];
+
+let answers = {}, current = 0;
+
+function ranked() { return [...BAKES].sort((a,b) => b.score(answers) - a.score(answers)); }
+
+function render() {
+  const body = document.getElementById("qbody");
+  const prog = document.getElementById("prog");
+
+  if (current >= Qs.length) {
+    prog.style.width = "100%";
+    const top4 = ranked();
+    const best = top4[0];
+    const alts = top4.slice(1, 4);
+    body.innerHTML = `
+      <div class="mascot-wrap">
+        <img src="panda_06_pie.png" alt="Pepper the panda holding a pie" />
+        <div class="mascot-caption">Ta-da! Here's your perfect bake!</div>
+      </div>
+      <div class="result-main">
+        <span class="result-emoji">${best.emoji}</span>
+        <div class="result-title">${best.title}</div>
+        <div class="result-desc">${best.desc}</div>
+        <div class="tags">${best.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+        <button class="recipe-btn" onclick="window.open('${best.url}', '_blank')">View full recipe</button>
+      </div>
+      <button class="more-btn" id="more-btn" onclick="revealAlts()">Looking for something else?</button>
+      <div id="alts-section" style="display:none">
+        <div class="alts-label">Here are 3 more ideas based on your answers:</div>
+        <div class="alts-grid">
+          ${alts.map(b => `
+            <div class="alt-card">
+              <span class="alt-card-emoji">${b.emoji}</span>
+              <div class="alt-card-title">${b.title}</div>
+              <button class="alt-card-link" onclick="window.open('${b.url}', '_blank')">View recipe</button>
+            </div>`).join("")}
+        </div>
+      </div>
+      <button class="restart-btn" onclick="restart()">Start again</button>`;
+    return;
+  }
+
+  prog.style.width = ((current / Qs.length) * 100) + "%";
+  const q = Qs[current];
+  const sel = answers[q.key];
+
+  body.innerHTML = `
+    <div class="step-ind">Question ${current + 1} of ${Qs.length}</div>
+    <div class="qlabel">${q.label}</div>
+    <div class="opts">
+      ${q.opts.map(o => `
+        <button class="opt ${sel === o.val ? 'sel' : ''}" onclick="pick('${q.key}', '${o.val}')">
+          <span class="opt-icon">${o.icon}</span>${o.label}
+        </button>`).join("")}
+    </div>
+    <div class="mascot-wrap">
+      <img src="${q.img}" alt="Pepper the panda" />
+      <div class="mascot-caption">${q.caption}</div>
+    </div>
+    <div class="nav-row">
+      <button class="back-btn" onclick="back()" style="${current === 0 ? 'visibility:hidden' : ''}">Back</button>
+      <button class="next-btn ${sel ? 'on' : ''}" onclick="nxt()">${current === Qs.length - 1 ? 'See my bake!' : 'Next'}</button>
+    </div>`;
+}
+
+function pick(k, v) { answers[k] = v; render(); }
+function nxt() { if (answers[Qs[current].key]) { current++; render(); } }
+function back() { if (current > 0) { current--; render(); } }
+function revealAlts() {
+  document.getElementById("alts-section").style.display = "block";
+  document.getElementById("more-btn").style.display = "none";
+}
+function restart() { answers = {}; current = 0; render(); }
+
+render();
+</script>
+</body>
+</html>
